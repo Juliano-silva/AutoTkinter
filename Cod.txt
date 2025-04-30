@@ -1,0 +1,22 @@
+Na parte da API
+
+
+Enviar para um Banco de Dados (sqlite infelizmente)
+
+root = tk.Tk()
+
+root.title = "Automação"
+root.geometry("500x500")
+root.configure(background="black")
+
+name_var = tk.StringVar()
+
+def Submit():
+    print(name_var.get())
+
+input = tk.Entry(root,textvariable=name_var,font=('calibre',10,'normal'))
+button = tk.Button(root,text="Click",command=Submit)
+
+input.pack()
+button.pack()
+root.mainloop()
