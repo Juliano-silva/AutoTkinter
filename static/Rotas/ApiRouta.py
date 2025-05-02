@@ -1,42 +1,41 @@
 import tkinter as tk
-from static.database import DataBS
+from static.package.database import DataBS
+from static.package.Configuration import config,Padronizar
 from selenium import webdriver
 
 
 root = tk.Tk()
-root.geometry("750x800")
-root.configure(background="#252525")
+root.geometry(config.geometria)
+root.configure(background=config.background)
+MyApp = Padronizar(root)
 
-Tabela_apis_text = tk.Label(root, text="Tabela de Apis", background="#252525", fg="white").pack()
+MyApp.LabelTk("Lista de APIS",config.background,10,20,config.font)
+Lb = tk.Listbox(root,background=config.background,fg=config.font,width=500)
 
-Escolha = tk.Label(root, text="", background="#252525", fg="white")
 
-Btn_lista = []
+for i in range(0,len(DataBS(escolha="select",databaseName="Apis_DB",valor1="url"))):
+    Lb.insert(i, str(DataBS(escolha="select",databaseName="Apis_DB",valor1="url")[i][0]))
+    Lb.pack()
 
-def limpar_botoes():
-    """Remove todos os botões existentes da lista e da interface."""
-    for botao in Btn_lista:
-        botao.destroy()
-    Btn_lista.clear()  # Limpa a lista de botões
-
-def openAPI(conteudo):
+def OpenApi(conteudo):
     options = webdriver.ChromeOptions()
-    options.add_argument(r"user-data-dir=C:\Users\ronal\AppData\Local\Google\Chrome\User Data") 
+    options.add_argument(r"user-data-dir=C:\Users\ronal\AppData\Local\Google\Chrome\User Data")
     driver = webdriver.Chrome(options=options)
 
     driver.get(conteudo)
 
-def Abrir(text):
-    ApiRef = str(DataBS("selectESC","apis_urls",25)[0]).replace("\\","").replace("'","").replace('"',"").replace("([","").replace(")]","").split(",")
-    Escolha.configure(text=f"{text[0]}")
-    limpar_botoes()  # Limpa os botões antes de criar novos
+def get_selected_items():
+    selected_indices = Lb.curselection()
+    selected_items = [Lb.get(i) for i in selected_indices]
+    Select_Itens = str(DataBS(escolha="selectEspecificar",databaseName="Apis_DB",valor1="apis_urls",valor2="url",valor3=f"{selected_items[0]}")[0])
+    Select_Itens = Select_Itens.replace("\\","").replace("'","").replace('"',"").replace("([","").replace(")]","").split(",")
 
-    Escolha.pack()
 
-    for i in range(len(ApiRef)):
-        botao = tk.Button(root, text=ApiRef[i], background="#252525", fg="white",command=lambda i=i: openAPI(ApiRef[i])).pack()
-        Btn_lista.append(botao)  # Adiciona o botão à lista
+    for j in range(len(Select_Itens)):
+        tk.Button(root, text=Select_Itens[j], background="#2f2f2f", fg="white", font=("Helvetica", 10),cursor="hand2",padx=10, pady=10,command=lambda j=j: OpenApi(Select_Itens[j])).pack()
 
-for i in range(2):
-    Tabela_apis = tk.Button(root, text=DataBS("select", "url", None)[i], padx=200, pady=50,command=lambda i=i: Abrir(DataBS("select", "url", None)[i])).pack()
+MyApp.ButtonTK("Listar Urls",10,10,get_selected_items)
+
+MyApp.LabelTk("",config.background,10,20,config.font)
+
 root.mainloop()

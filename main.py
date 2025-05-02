@@ -1,5 +1,5 @@
 import tkinter as tk
-from static.Config import config
+from static.package.Configuration import config
 
 root = tk.Tk()
 root.geometry("500x500")

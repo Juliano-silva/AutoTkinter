@@ -1,8 +1,13 @@
 import tkinter as tk
+from static.package.Configuration import config
+
 
 root = tk.Tk()
-root.geometry("500x600")
-root.configure(background="#ffffff")
+
+root.title = "Automação"
+root.geometry(config.geometria)
+root.configure(background=config.background)
+
 
 
 root.mainloop()
